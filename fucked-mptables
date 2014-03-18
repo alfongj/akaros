@@ -1,0 +1,739 @@
+Found MP table at 0xffff8000000fcdc0
+_MP_ @ 0xffff8000000fcdc0, addr 0x00000000000fc790 length 1d rev 4 0x0000000000000000 0x0000000000000000 0x0000000000000000 0x0000000000000000 0x0000000000000000
+PCMP @ 0xffff8000000fc790 length 0x000000000000052c revision 4
+                INTEL oaddr 0x0000000000000000 olength 0x0000000000000000
+ entry 136 apicpa 0x00000000fee00000
+ xlength 0x0000000000000104 xchecksum 0x0000000000000094
+mpparse: bus: 0 type PCI   
+mpparse: bus: 128 type PCI   
+mpparse: bus: 1 type PCI   
+mpparse: bus: 2 type PCI   
+mpparse: bus: 4 type PCI   
+mpparse: bus: 6 type PCI   
+mpparse: bus: 7 type PCI   
+mpparse: bus: 8 type PCI   
+mpparse: bus: 9 type PCI   
+mpparse: bus: 10 type PCI   
+mpparse: bus: 11 type PCI   
+mpparse: bus: 12 type PCI   
+mpparse: bus: 13 type PCI   
+mpparse: bus: 136 type ISA   
+mpparse: bus: 129 type PCI   
+mpparse: bus: 130 type PCI   
+mpparse: bus: 131 type PCI   
+mpparse: bus: 132 type PCI   
+mpparse: bus: 133 type PCI   
+mpparse: bus: 134 type PCI   
+mpparse: bus: 135 type PCI   
+
+/* later on, we won't see any intovrs for odd buses, nor for any bus > 128, other than ISA (136/0x88).
+ * they are supposed to list the buses in numerically increasing order.  128 and 136 are out of order.
+ * of the PCI buses we discover later (by brute forcing PCI space, MP tables don't have 127 (0x7f) discovered.
+ * MP tables also reports extra PCI buses with no devices on them 1, 7, 11, 13, 129, 132, 133, 134, 135.  not a huge deal there.
+ *
+ * can the bios move shit around, like move a device from one bus to another in the PCI config space, and the MP tables shows the old setup?
+ *
+ */
+
+
+IOAPIC initialized at 0xffffffffbfe00000
+IOAPIC initialized at 0xffffffffbfe3f000
+IOAPIC initialized at 0xffffffffbfe7f000
+
+/* there are 3 IOAPICS, but we only see intovrs for 2 of them.  not a problem though. */
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 0 APIC 0 INTIN 2
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 2) bus 0x88 dev 0x00 lo 0x10000
+	/* these ISA irqs look fine (note that for non-PCI, the IRQ gets shifted << 2, then passed on to the rdt init) */
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 1 APIC 0 INTIN 1
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 1) bus 0x88 dev 0x04 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 3 APIC 0 INTIN 3
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 3) bus 0x88 dev 0x0c lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 4 APIC 0 INTIN 4
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 4) bus 0x88 dev 0x10 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 5 APIC 0 INTIN 5
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 5) bus 0x88 dev 0x14 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 7 APIC 0 INTIN 7
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 7) bus 0x88 dev 0x1c lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 8 APIC 0 INTIN 8
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 8) bus 0x88 dev 0x20 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000d bus 136 IRQ 9 APIC 0 INTIN 9
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 9) bus 0x88 dev 0x24 lo 0x18000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 10 APIC 0 INTIN 10
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 10) bus 0x88 dev 0x28 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 11 APIC 0 INTIN 11
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 11) bus 0x88 dev 0x2c lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 12 APIC 0 INTIN 12
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 12) bus 0x88 dev 0x30 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 13 APIC 0 INTIN 13
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 13) bus 0x88 dev 0x34 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 14 APIC 0 INTIN 14
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 14) bus 0x88 dev 0x38 lo 0x10000
+
+mpparse: intr: iointr: type 0 flags 0x0000000000000000 bus 136 IRQ 15 APIC 0 INTIN 15
+  bus type: ISA    	IOAPIC 0 rdt init: (intin 15) bus 0x88 dev 0x3c lo 0x10000
+
+
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 124 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x7c lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 125 APIC 0 INTIN 21
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 21) bus 0x00 dev 0x7d lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 126 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x00 dev 0x7e lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 127 APIC 0 INTIN 22
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 22) bus 0x00 dev 0x7f lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 116 APIC 0 INTIN 20
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 20) bus 0x00 dev 0x74 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 117 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x75 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 118 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x76 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 119 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x77 lo 0x1a000
+
+
+/* this entry should correspond to the following USB device (0x68 >> 2 = 0x1a).
+ * the INTP part of the IRQ (lower 2 bits) is 0, which means INTA, according to the MP spec. 
+ * but the device thinks it is INTB.  did the BIOS reconfig it on me?  the other USB dev (00:1d.0) has a similar problem */
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 104 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x68 lo 0x1a000
+
+00:1a.0 USB: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02    	/* pin 0x02 in PCI config is INTB */
+	Vendor Id: 0x8086 Device Id: 0x1d2d
+	Serial Bus Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0f20000, MMIO Size 0x0000000000000400
+
+
+
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 105 APIC 0 INTIN 22
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 22) bus 0x00 dev 0x69 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 106 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x6a lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 107 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x6b lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 88 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x58 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 89 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x59 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 90 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x5a lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 91 APIC 0 INTIN 17
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 17) bus 0x00 dev 0x5b lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 12 IRQ 0 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x0c dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 12 IRQ 1 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x0c dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 12 IRQ 2 APIC 0 INTIN 17
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 17) bus 0x0c dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 12 IRQ 3 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x0c dev 0x03 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 68 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x44 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 69 APIC 0 INTIN 17
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 17) bus 0x00 dev 0x45 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 70 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x46 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 71 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x47 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 112 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x70 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 113 APIC 0 INTIN 17
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 17) bus 0x00 dev 0x71 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 114 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x72 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 115 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x73 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 0 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 1 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 2 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 3 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x03 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 4 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x04 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 5 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x05 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 6 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x06 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 7 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x07 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 8 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x08 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 9 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x09 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 10 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x0a lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 11 APIC 1 INTIN 23
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 23) bus 0x00 dev 0x0b lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 12 APIC 0 INTIN 16
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 16) bus 0x00 dev 0x0c lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 13 APIC 0 INTIN 17
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 17) bus 0x00 dev 0x0d lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 14 APIC 0 INTIN 18
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 18) bus 0x00 dev 0x0e lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 15 APIC 0 INTIN 19
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 19) bus 0x00 dev 0x0f lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 4 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x04 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 5 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x05 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 6 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x06 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 7 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x07 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 8 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x08 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 9 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x09 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 10 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0a lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 11 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0b lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 12 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0c lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 13 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0d lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 14 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0e lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 15 APIC 0 INTIN 23
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 23) bus 0x80 dev 0x0f lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 16 APIC 1 INTIN 7
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 7) bus 0x00 dev 0x10 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 17 APIC 1 INTIN 15
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 15) bus 0x00 dev 0x11 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 18 APIC 1 INTIN 7
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 7) bus 0x00 dev 0x12 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 0 IRQ 19 APIC 1 INTIN 15
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 15) bus 0x00 dev 0x13 lo 0x1a000
+
+/* these next ones are fucked.  same IOAPIC,INTIN as previous ones, but with diff flags.  all the IOAPIC initin 0-15 are ISA irq 0-15 */
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 16 APIC 0 INTIN 7
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 7) bus 0x80 dev 0x10 lo 0x1a000
+
+/* WTF, where did 65536 come from? */
+multiple irq botch bus 128 0/7/16 lo 106496 vs 65536
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 17 APIC 0 INTIN 15
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 15) bus 0x80 dev 0x11 lo 0x1a000
+
+multiple irq botch bus 128 0/15/17 lo 106496 vs 65536
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 18 APIC 0 INTIN 7
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 7) bus 0x80 dev 0x12 lo 0x1a000
+
+multiple irq botch bus 128 0/7/18 lo 106496 vs 65536
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 128 IRQ 19 APIC 0 INTIN 15
+  bus type: PCI    	IOAPIC 0 rdt init: (intin 15) bus 0x80 dev 0x13 lo 0x1a000
+
+multiple irq botch bus 128 0/15/19 lo 106496 vs 65536
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 2 IRQ 0 APIC 1 INTIN 3
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 3) bus 0x02 dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 2 IRQ 1 APIC 1 INTIN 6
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 6) bus 0x02 dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 2 IRQ 2 APIC 1 INTIN 4
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 4) bus 0x02 dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 2 IRQ 3 APIC 1 INTIN 5
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 5) bus 0x02 dev 0x03 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 4 IRQ 0 APIC 1 INTIN 8
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 8) bus 0x04 dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 4 IRQ 1 APIC 1 INTIN 12
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 12) bus 0x04 dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 4 IRQ 2 APIC 1 INTIN 13
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 13) bus 0x04 dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 4 IRQ 3 APIC 1 INTIN 14
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 14) bus 0x04 dev 0x03 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 6 IRQ 0 APIC 1 INTIN 10
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 10) bus 0x06 dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 6 IRQ 1 APIC 1 INTIN 13
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 13) bus 0x06 dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 6 IRQ 2 APIC 1 INTIN 12
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 12) bus 0x06 dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 6 IRQ 3 APIC 1 INTIN 14
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 14) bus 0x06 dev 0x03 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 8 IRQ 0 APIC 1 INTIN 18
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 18) bus 0x08 dev 0x00 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 8 IRQ 1 APIC 1 INTIN 21
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 21) bus 0x08 dev 0x01 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 8 IRQ 2 APIC 1 INTIN 20
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 20) bus 0x08 dev 0x02 lo 0x1a000
+
+mpparse: intr: iointr: type 0 flags 0x000000000000000f bus 8 IRQ 3 APIC 1 INTIN 22
+  bus type: PCI    	IOAPIC 1 rdt init: (intin 22) bus 0x08 dev 0x03 lo 0x1a000
+
+mpparse: intr: LINTR: type 3 flags 0x0000000000000000 bus 0 IRQ 0 APIC 255 INTIN 0
+mpparse: intr: LINTR: type 1 flags 0x0000000000000000 bus 0 IRQ 0 APIC 255 INTIN 1
+
+/* done with the mpparse and mpacpi at this point */
+
+
+MP and ACPI found 32 cores
+	about to set up a bus irq, irq 48, handler 0xffffffffc20434f0 tbdf 0x0000000012000000
+IRQ 48, vector 48, type lapic
+	about to set up a bus irq, irq 255, handler 0xffffffffc2043da0 tbdf 0x0000000013000000
+IRQ 255, vector 255, type IPI
+TSC Frequency: 2593762932
+Bus Frequency: 99760160
+TSC overhead (Min: 32, Max: 36)
+00:00.0 Host/PCI: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c00
+	Bridge Device  Intel Corporation
+00:01.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c02
+	Bridge Device  Intel Corporation
+00:01.1 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c03
+	Bridge Device  Intel Corporation
+00:02.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c04
+	Bridge Device  Intel Corporation
+00:03.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c08
+	Bridge Device  Intel Corporation
+00:04.0 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c20
+	Base Systems Peripheral  Intel Corporation
+00:04.1 Other: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x3c21
+	Base Systems Peripheral  Intel Corporation
+00:04.2 Other: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x03
+	Vendor Id: 0x8086 Device Id: 0x3c22
+	Base Systems Peripheral  Intel Corporation
+00:04.3 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x04
+	Vendor Id: 0x8086 Device Id: 0x3c23
+	Base Systems Peripheral  Intel Corporation
+00:04.4 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c24
+	Base Systems Peripheral  Intel Corporation
+00:04.5 Other: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x3c25
+	Base Systems Peripheral  Intel Corporation
+00:04.6 Other: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x03
+	Vendor Id: 0x8086 Device Id: 0x3c26
+	Base Systems Peripheral  Intel Corporation
+00:04.7 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x04
+	Vendor Id: 0x8086 Device Id: 0x3c27
+	Base Systems Peripheral  Intel Corporation
+00:05.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c28
+	Base Systems Peripheral  Intel Corporation
+00:11.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d3e
+	Bridge Device  Intel Corporation
+00:16.0 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d3a
+	Simple Communications Controller  Intel Corporation
+00:16.1 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d3b
+	Simple Communications Controller  Intel Corporation
+00:1a.0 USB: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x1d2d
+	Serial Bus Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0f20000, MMIO Size 0x0000000000000400
+00:1c.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d10
+	Bridge Device  Intel Corporation
+00:1d.0 USB: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d26
+	Serial Bus Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0f10000, MMIO Size 0x0000000000000400
+00:1e.0 PCI/PCI: Intel 82801DB Hub Interface to PCI Bridge: Standard PCI Device
+	IRQ: 255 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x244e
+	Bridge Device  Intel Corporation
+00:1f.0 PCI/ISA: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x1d41
+	Bridge Device  Intel Corporation
+02:00.0 Ethernet: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1521
+	Network Controller  Intel Corporation
+02:00.1 Ethernet: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x1521
+	Network Controller  Intel Corporation
+02:00.2 Ethernet: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x03
+	Vendor Id: 0x8086 Device Id: 0x1521
+	Network Controller  Intel Corporation
+02:00.3 Ethernet: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x04
+	Vendor Id: 0x8086 Device Id: 0x1521
+	Network Controller  Intel Corporation
+04:00.0 Ethernet: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x10fb
+	Network Controller  Intel Corporation
+04:00.1 Ethernet: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x10fb
+	Network Controller  Intel Corporation
+06:00.0 RAID: LSI  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x1000 Device Id: 0x005b
+	Mass Storage Controller  LSI Logic
+	BAR 0: IO port 0x3000
+	BAR 1: MMIO Base 0x00000000d0d60000, MMIO Size 0x0000000000004000
+	BAR 3: MMIO Base 0x00000000d0d00000, MMIO Size 0x0000000000040000
+08:00.0 PCI/PCI: Pericom PI7C9X130 PCI-X Bridge: Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x12d8 Device Id: 0xe130
+	Bridge Device  Pericom Semiconductor
+09:00.0 Ethernet: Intel 82545EM Gigabit Ethernet Controller (copper): Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x100f
+	Network Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0c00000, MMIO Size 0x0000000000020000
+	BAR 4: IO port 0x2000
+0a:00.0 : Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1d6b
+	Mass Storage Controller  Intel Corporation
+0c:00.0 PC Compatible: Matrox G200e Matrox G200e (ServerEngines) - English: Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x102b Device Id: 0x0522
+	Display Controller VGA Matrox Electronic Systems Ltd.
+	BAR 0: MMIO Base 0x00000000ea000000, MMIO Size 0x0000000001000000
+	BAR 1: MMIO Base 0x00000000d0810000, MMIO Size 0x0000000000004000
+	BAR 2: MMIO Base 0x00000000d0000000, MMIO Size 0x0000000000800000
+7f:08.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c80
+	Base Systems Peripheral  Intel Corporation
+7f:09.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c90
+	Base Systems Peripheral  Intel Corporation
+7f:0a.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cc0
+	Base Systems Peripheral  Intel Corporation
+7f:0a.1 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cc1
+	Base Systems Peripheral  Intel Corporation
+7f:0a.2 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cc2
+	Base Systems Peripheral  Intel Corporation
+7f:0a.3 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cd0
+	Base Systems Peripheral  Intel Corporation
+7f:0b.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce0
+	Base Systems Peripheral  Intel Corporation
+7f:0c.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0c.1 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0c.2 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0c.3 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0d.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0d.1 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0d.2 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0d.3 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce8
+	Base Systems Peripheral  Intel Corporation
+7f:0e.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ca0
+	Base Systems Peripheral  Intel Corporation
+7f:0e.1 : Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c46
+	  Intel Corporation
+7f:0f.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ca8
+	Base Systems Peripheral  Intel Corporation
+7f:0f.1 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c71
+	Base Systems Peripheral  Intel Corporation
+7f:0f.2 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3caa
+	Base Systems Peripheral  Intel Corporation
+7f:0f.3 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cab
+	Base Systems Peripheral  Intel Corporation
+7f:0f.4 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cac
+	Base Systems Peripheral  Intel Corporation
+7f:0f.5 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cad
+	Base Systems Peripheral  Intel Corporation
+7f:0f.6 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cae
+	Base Systems Peripheral  Intel Corporation
+7f:10.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb0
+	Base Systems Peripheral  Intel Corporation
+7f:10.1 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb1
+	Base Systems Peripheral  Intel Corporation
+7f:10.2 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb2
+	Base Systems Peripheral  Intel Corporation
+7f:10.3 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb3
+	Base Systems Peripheral  Intel Corporation
+7f:10.4 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb4
+	Base Systems Peripheral  Intel Corporation
+7f:10.5 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb5
+	Base Systems Peripheral  Intel Corporation
+7f:10.6 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb6
+	Base Systems Peripheral  Intel Corporation
+7f:10.7 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb7
+	Base Systems Peripheral  Intel Corporation
+7f:11.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3cb8
+	Base Systems Peripheral  Intel Corporation
+7f:13.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3ce4
+	Base Systems Peripheral  Intel Corporation
+7f:13.1 : Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c43
+	  Intel Corporation
+80:01.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c02
+	Bridge Device  Intel Corporation
+80:01.1 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c03
+	Bridge Device  Intel Corporation
+80:02.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c04
+	Bridge Device  Intel Corporation
+80:03.0 PCI/PCI: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c08
+	Bridge Device  Intel Corporation
+80:04.0 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c20
+	Base Systems Peripheral  Intel Corporation
+80:04.1 Other: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x3c21
+	Base Systems Peripheral  Intel Corporation
+80:04.2 Other: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x03
+	Vendor Id: 0x8086 Device Id: 0x3c22
+	Base Systems Peripheral  Intel Corporation
+80:04.3 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x04
+	Vendor Id: 0x8086 Device Id: 0x3c23
+	Base Systems Peripheral  Intel Corporation
+80:04.4 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x3c24
+	Base Systems Peripheral  Intel Corporation
+80:04.5 Other: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02
+	Vendor Id: 0x8086 Device Id: 0x3c25
+	Base Systems Peripheral  Intel Corporation
+80:04.6 Other: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x03
+	Vendor Id: 0x8086 Device Id: 0x3c26
+	Base Systems Peripheral  Intel Corporation
+80:04.7 Other: Intel  : Standard PCI Device
+	IRQ: 11 IRQ pin: 0x04
+	Vendor Id: 0x8086 Device Id: 0x3c27
+	Base Systems Peripheral  Intel Corporation
+80:05.0 Other: Intel  : Standard PCI Device
+	IRQ: 00 IRQ pin: 0x00
+	Vendor Id: 0x8086 Device Id: 0x3c28
+	Base Systems Peripheral  Intel Corporation
+82:00.0 PCI/PCI: Pericom PI7C9X130 PCI-X Bridge: Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x12d8 Device Id: 0xe130
+	Bridge Device  Pericom Semiconductor
+83:00.0 Ethernet: Intel 82543GC Gigabit Ethernet Controller (Copper): Standard PCI Device
+	IRQ: 11 IRQ pin: 0x01
+	Vendor Id: 0x8086 Device Id: 0x1004
+	Network Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000ec000000, MMIO Size 0x0000000000020000
+	BAR 1: MMIO Base 0x00000000ec030000, MMIO Size 0x0000000000010000
+Number of Cores Detected: 32
+	about to set up a bus irq, irq 3, handler 0xffffffffc206c4b0 tbdf 0x0000000005000000
+	RBUS: bus 0x88, dev 0x0c: got RDT 0xffffffffc4771040
+IRQ 3, vector 65, type ioapic
+	about to set up a bus irq, irq 4, handler 0xffffffffc206c4b0 tbdf 0x0000000005000000
+	RBUS: bus 0x88, dev 0x10: got RDT 0xffffffffc4771060
+IRQ 4, vector 66, type ioapic
+	about to set up a bus irq, irq 1, handler 0xffffffffc206c4b0 tbdf 0x0000000005000000
+	RBUS: bus 0x88, dev 0x04: got RDT 0xffffffffc4771020
+IRQ 1, vector 67, type ioapic
+Test TSC overhead unstable (Min: 544, Max: 287784).  Do not benchmark!
+Incoming IRQ, ISR: 53 on core 0
+igbe/e1000 driver found 0x8086:100f at 09:00.0
+igbe/e1000 driver found 0x8086:1004 at 83:00.0
+	about to set up a bus irq, irq 11, handler 0xffffffffc2068910 tbdf 0x000000000c090000
+	RBUS: bus 0x09, dev 0x00: didn't get one
+Non-ISA IRQ 11 not found in MADT, guessing...
+	IOAPIC 0 rdt init: (intin 11) bus 0x09 dev 0x00 lo 0xa000
+
+multiple irq botch bus 9 0/11/0 lo 40960 vs 65536
+	RBUS: bus 0x09, dev 0x00: didn't get one
+Unable to build IOAPIC route for irq 11
+#l0: i82543: 1000Mbps port 0xd0c00000 irq 11: 00:07:e9:09:71:04
+	about to set up a bus irq, irq 11, handler 0xffffffffc2068910 tbdf 0x000000000c830000
+	RBUS: bus 0x83, dev 0x00: didn't get one
+Non-ISA IRQ 11 not found in MADT, guessing...
+	IOAPIC 0 rdt init: (intin 11) bus 0x83 dev 0x00 lo 0xa000
+
+multiple irq botch bus 131 0/11/0 lo 40960 vs 65536
+	RBUS: bus 0x83, dev 0x00: didn't get one
+

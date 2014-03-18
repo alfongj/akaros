@@ -469,7 +469,7 @@ void handle_irq(struct hw_trapframe *hw_tf)
 	if (hw_tf->tf_trapno != IdtLAPIC_TIMER)	/* timer irq */
 	if (hw_tf->tf_trapno != I_KERNEL_MSG)
 	if (hw_tf->tf_trapno != 65)	/* qemu serial tends to get this one */
-		printd("Incoming IRQ, ISR: %d on core %d\n", hw_tf->tf_trapno,
+		printk("Incoming IRQ, ISR: %d on core %d\n", hw_tf->tf_trapno,
 		       core_id());
 	/* TODO: RCU read lock */
 	irq_h = irq_handlers[hw_tf->tf_trapno];
@@ -506,12 +506,14 @@ int register_irq(int irq, isr_t handler, void *irq_arg, uint32_t tbdf)
 	assert(irq_h);
 	irq_h->dev_irq = irq;
 	irq_h->tbdf = tbdf;
+	printk("\tabout to set up a bus irq, irq %d, handler %p tbdf %p\n", irq,
+	       handler, tbdf);
 	vector = bus_irq_setup(irq_h);
 	if (vector == -1) {
 		kfree(irq_h);
 		return -1;
 	}
-	printd("IRQ %d, vector %d, type %s\n", irq, vector, irq_h->type);
+	printk("IRQ %d, vector %d, type %s\n", irq, vector, irq_h->type);
 	assert(irq_h->check_spurious && irq_h->eoi);
 	irq_h->isr = handler;
 	irq_h->data = irq_arg;

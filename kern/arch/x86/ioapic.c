@@ -107,11 +107,15 @@ struct Rdt *rdtlookup(struct apic *apic, int intin)
 
 struct Rdt *rbus_get_rdt(int busno, int devno)
 {
+printk("\tRBUS: bus 0x%02x, dev 0x%02x:", busno, devno);
 	struct Rbus *rbus;
 	for (rbus = rdtbus[busno]; rbus != NULL; rbus = rbus->next) {
-		if (rbus->devno == devno)
+		if (rbus->devno == devno) {
+			printk(" got RDT %p\n", rbus->rdt);
 			return rbus->rdt;
+		}
 	}
+printk(" didn't get one\n");
 	return 0;
 }
 
@@ -129,6 +133,47 @@ void ioapicintrinit(int busno, int ioapicno, int intin, int devno, int lo)
 	struct Rdt *rdt;
 	struct apic *ioapic;
 
+	// XXX
+	// this devno isn't TBDF dev, it's shifted+intp.
+	//
+	// we do get multiple devnos on an intin, like 119 and 106
+	// 		119 = 0x77 (pci dev 29 0x1d, intp 3 (INTD, i think)
+	// 		106 = 0x6a (pci dev 26 0x1a, intp 2 (INTC)
+	//
+	// 		MP spec says they are fine. , but them seem to be off by one in the
+	// 		wrong direction (they added 1 instead of subtracting)
+	//
+	// multiple irq botch still
+	// 		why do we get some lo 65536 (-1?)
+	// 		some IOAPIC wirings use the same INTINs as the ISA bus IRQs
+	//		
+	//
+	// Incoming IRQ, ISR: 53 on core 0 - that's the LAPIC err lvt.  had it
+	// happen on c89 sometime after the TSC test
+	// 		btw, i guess that shit isn't masked...
+	//
+	//  mp finds bus 9, for instance, but has no intovrs for it.  so no NIC.
+	//  	i don't see bus 0x7f (127).  though i see lots of others
+	//  	seems like we get no intovrs for any odd numbered PCI bus
+
+
+
+#if 0
+	these values for IRQ pin: 0x01 is INTA, etc  (0 means no pin)
+00:1a.0 USB: Intel  : Standard PCI Device
+	IRQ: 10 IRQ pin: 0x02 (INTB)
+	Vendor Id: 0x8086 Device Id: 0x1d2d
+	Serial Bus Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0f20000, MMIO Size 0x0000000000000400
+00:1d.0 USB: Intel  : Standard PCI Device
+	IRQ: 05 IRQ pin: 0x01 (INTA)
+	Vendor Id: 0x8086 Device Id: 0x1d26
+	Serial Bus Controller  Intel Corporation
+	BAR 0: MMIO Base 0x00000000d0f10000, MMIO Size 0x0000000000000400
+#endif
+
+	printk("\tIOAPIC %d rdt init: (intin %d) bus 0x%02x dev 0x%02x lo 0x%02x\n\n",
+	       ioapicno, intin, busno, devno, lo);
 	if (busno >= Nbus || ioapicno >= Napic || nrdtarray >= Nrdt) {
 		printk("Bad bus %d ioapic %d or nrdtarray %d too big\n", busno,
 		       ioapicno, nrdtarray);
@@ -149,12 +194,14 @@ void ioapicintrinit(int busno, int ioapicno, int intin, int devno, int lo)
 		rdt->lo = lo;
 		rdt->hi = 0;
 	} else {
-		if (lo != rdt->lo) {
+		/* Polarity/trigger check.  Stored lo also has the vector in 0xff */
+		if (lo != (rdt->lo & ~0xff)) {
 			printk("multiple irq botch bus %d %d/%d/%d lo %d vs %d\n",
 				   busno, ioapicno, intin, devno, lo, rdt->lo);
 			return;
 		}
 	}
+	/* TODO: this shit is racy.  (refcnt, linked list addition) */
 	rdt->ref++;
 	rbus = kzmalloc(sizeof *rbus, 0);
 	rbus->rdt = rdt;
@@ -384,7 +431,6 @@ static int msimask(struct Vkey *v, int mask)
 	if (p == NULL)
 		return -1;
 	return pcimsimask(p, mask);
-}
 
 static int intrenablemsi(struct vctl *v, Pcidev * p)
 {
@@ -516,7 +562,7 @@ int bus_irq_setup(struct irq_handler *irq_h)
 {
 	struct Rbus *rbus;
 	struct Rdt *rdt;
-	int busno = 0, devno, vecno;
+	int busno, devno, vecno;
 	struct pci_device pcidev;
 
 	if (!ioapic_exists() && (BUSTYPE(irq_h->tbdf) != BusLAPIC)) {
@@ -565,19 +611,23 @@ int bus_irq_setup(struct irq_handler *irq_h)
 #if 0
 			Pcidev *pcidev;
 
-			busno = BUSBNO(irq_h->tbdf);
 			if ((pcidev = pcimatchtbdf(irq_h->tbdf)) == NULL)
 				panic("no PCI dev for tbdf %p", irq_h->tbdf);
 			if ((vecno = intrenablemsi(irq_h, pcidev)) != -1)
 				return vecno;
 			disablemsi(irq_h, pcidev);
 #endif
+			busno = BUSBNO(irq_h->tbdf);
 			explode_tbdf(irq_h->tbdf);
 			devno = pcidev_read8(&pcidev, PciINTP);
 
+			/* this might not be a big deal - some PCI devices have no INTP.  if
+			 * so, change our devno - 1 below. */
 			if (devno == 0)
 				panic("no INTP for tbdf %p", irq_h->tbdf);
-			/* remember, devno is the device shifted with irq pin in bits 0-1 */
+			/* remember, devno is the device shifted with irq pin in bits 0-1.
+			 * we subtract 1, since the PCI intp maps 1 -> INTA, 2 -> INTB, etc,
+			 * and the MP spec uses 0 -> INTA, 1 -> INTB, etc. */
 			devno = BUSDNO(irq_h->tbdf) << 2 | (devno - 1);
 			break;
 		default:
@@ -618,7 +668,7 @@ int bus_irq_setup(struct irq_handler *irq_h)
 		rdt->lo |= vecno;
 		rdtvecno[vecno] = rdt;
 	} else {
-		printd("%p: mutiple irq bus %d dev %d\n", irq_h->tbdf, busno, devno);
+		printk("%p: mutiple irq bus %d dev %d\n", irq_h->tbdf, busno, devno);
 	}
 	rdt->enabled++;
 	rdt->hi = 0;			/* route to 0 by default */
@@ -635,4 +685,10 @@ int bus_irq_setup(struct irq_handler *irq_h)
 	irq_h->type = "ioapic";
 
 	return vecno;
+}
+
+// XXX
+void xme(int vector, int dest)
+{
+	ioapic_route_irq(vector, dest);
 }

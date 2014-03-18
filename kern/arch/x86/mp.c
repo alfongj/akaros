@@ -63,7 +63,7 @@ static Mpbus mpbusdef[] = {
 
 static Mpbus *mpbus[Nbus];
 int mpisabusno = -1;
-#define MP_VERBOSE_DEBUG 0
+#define MP_VERBOSE_DEBUG 1
 
 static void mpintrprint(char *s, uint8_t * p)
 {
@@ -231,14 +231,14 @@ static int mpparse(PCMP * pcmp, int maxcores)
 				p += 20;
 				break;
 			case 1:	/* bus */
-				printd("mpparse: bus: %d type %6.6s\n", p[1], (char *)p + 2);
+				printk("mpparse: bus: %d type %6.6s\n", p[1], (char *)p + 2);
 				if (p[1] >= Nbus) {
-					printd("mpparse: bus %d out of range\n", p[1]);
+					printk("mpparse: bus %d out of range\n", p[1]);
 					p += 8;
 					break;
 				}
 				if (mpbus[p[1]] != NULL) {
-					printd("mpparse: bus %d already allocated\n", p[1]);
+					printk("mpparse: bus %d already allocated\n", p[1]);
 					p += 8;
 					break;
 				}
@@ -247,7 +247,7 @@ static int mpparse(PCMP * pcmp, int maxcores)
 						continue;
 					if (memcmp(p + 2, "ISA   ", 6) == 0) {
 						if (mpisabusno != -1) {
-							printd("mpparse: bus %d already have ISA bus %d\n",
+							printk("mpparse: bus %d already have ISA bus %d\n",
 								   p[1], mpisabusno);
 							continue;
 						}
@@ -257,8 +257,8 @@ static int mpparse(PCMP * pcmp, int maxcores)
 					break;
 				}
 				if (mpbus[p[1]] == NULL)
-					printd("mpparse: bus %d type %6.6s unknown\n",
-						   p[1], (char *unused_char_p_t)p + 2);
+					printk("mpparse: bus %d type %6.6s unknown\n",
+						   p[1], (char *)p + 2);
 
 				p += 8;
 				break;
@@ -287,11 +287,13 @@ static int mpparse(PCMP * pcmp, int maxcores)
 					break;
 				}
 				if ((lo = mpmkintr(p)) == 0) {
+					if (MP_VERBOSE_DEBUG)
+						mpintrprint("iointr skipped", p);
 					p += 8;
 					break;
 				}
 				if (MP_VERBOSE_DEBUG)
-					mpintrprint(NULL, p);
+					mpintrprint("iointr", p);
 
 				/*
 				 * Always present the device number in the style
@@ -302,10 +304,13 @@ static int mpparse(PCMP * pcmp, int maxcores)
 				 *
 				 * For PCI devices, this field's lowest two bits are INT#A == 0,
 				 * INT#B == 1, etc.  Bits 2-6 are the PCI device number.
+				 *
+				 * XXX is it really INT#A == 0?  or +- 1?
 				 */
 				devno = p[5];
 				if (memcmp(mpbus[p[4]]->type, "PCI   ", 6) != 0)
 					devno <<= 2;
+				printk("  bus type: %s ", mpbus[p[4]]->type);
 				ioapicintrinit(p[4], p[6], p[7], devno, lo);
 
 				p += 8;
